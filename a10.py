@@ -121,13 +121,36 @@ def get_birth_date(name: str) -> str:
     match = get_match(infobox_text, pattern, error_text)
 
     return match.group("birth")
+def get_birth_place(name: str) -> str:
+    """Gets the place where the given person was born
+    Args:
+        name - name of the given person
 
+    Returns:
+        place they were born
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:Place\D*)(?P<birthp>^[^,]*,\d+)"
+    error_text = (
+        "Page infobox has no birth place information (at least none in the correct location)"
+    )
+    match = get_match(infobox_text, pattern, error_text)
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
 # list of the answer(s) and not just the answer itself.
 
+def birth_place(matches: List[str]) -> List[str]:
+    """Returns birth place of named person in matches
+    
+    Args:
+        matches - match from pattern of person's name to find birth place of
 
+    Returns:
+        birth place of named person
+    
+    """
+    return [get_birth_place(" ".join(matches))]
 def birth_date(matches: List[str]) -> List[str]:
     """Returns birth date of named person in matches
 
@@ -165,6 +188,7 @@ Action = Callable[[List[str]], List[Any]]
 # The pattern-action list for the natural language query system. It must be declared
 # here, after all of the function definitions
 pa_list: List[Tuple[Pattern, Action]] = [
+    ("where was % born".split(), birth_place),
     ("when was % born".split(), birth_date),
     ("what is the polar radius of %".split(), polar_radius),
     (["bye"], bye_action),
