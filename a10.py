@@ -135,6 +135,32 @@ def get_birth_place(name: str) -> str:
         "Page infobox has no birth place information (at least none in the correct location)"
     )
     match = get_match(infobox_text, pattern, error_text)
+def get_education(name: str) -> str:
+    """Gets the place where the given person was born
+    Args:
+        name - name of the given person
+
+    Returns:
+        education of the inputed person
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:Education\D*)(?P<education>\w+,\w+)"
+    error_text = (
+        "Page infobox has no educational information (at least none in the correct location)"
+    )
+def get_father(name: str) -> str:
+    """Gets the father of the inputted name
+    Args:
+        name - name of the given person
+
+    Returns:
+        father of the inputed person
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:Father\D*)(?P<father>\w+,\w+)"
+    error_text = (
+        "Page infobox has no information about their father (at least none in the correct location)"
+    )
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
 # according to the action and the argument. It is important that each function returns a
@@ -174,6 +200,26 @@ def polar_radius(matches: List[str]) -> List[str]:
     """
     return [get_polar_radius(matches[0])]
 
+def education(matches: List[str]) -> List[str]:
+    """Returns the place of education
+    Args:
+        matches - match from pattern of Education to find education
+
+    Returns:
+        place of education
+    """
+    return[get_education(matches[0])]
+
+def father(matches: List[str]) -> List[str]:
+    """Returns the place of education
+    Args:
+        matches - match from pattern of father to find their father
+
+    Returns:
+        father
+    """
+    return[get_father(matches[0])]
+
 
 # dummy argument is ignored and doesn't matter
 def bye_action(dummy: List[str]) -> None:
@@ -191,6 +237,9 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("where was % born".split(), birth_place),
     ("when was % born".split(), birth_date),
     ("what is the polar radius of %".split(), polar_radius),
+    ("where did % have there education".split(),education),
+    ("who is %'s father".split(),father),
+    ("who is %'s dad".split(), father),
     (["bye"], bye_action),
 ]
 
