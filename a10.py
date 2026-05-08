@@ -250,7 +250,15 @@ def polar_radius(matches: List[str]) -> List[str]:
 
 
 def polar_density(matches: List[str]) -> List[str]:
-    
+    """Returns polar density of the planet in matches
+
+    Args:
+        matches - match from the pattern of planet to find polar density of the planet
+
+    Returns:
+        polar denisity of planet 
+    """
+    return [get_planet_density(matches[0])]
 
 
 def education(matches: List[str]) -> List[str]:
@@ -261,7 +269,7 @@ def education(matches: List[str]) -> List[str]:
     Returns:
         place of education
     """
-    return[get_education(matches[0])]
+    return[get_education(" ".join(matches[0]))]
 
 
 def father(matches: List[str]) -> List[str]:
@@ -272,7 +280,7 @@ def father(matches: List[str]) -> List[str]:
     Returns:
         father
     """
-    return[get_father(matches[0])]
+    return[get_father(" ".join(matches[0]))]
 
 
 def capital(matches: List[str]) -> List[str]:
@@ -283,7 +291,7 @@ def capital(matches: List[str]) -> List[str]:
     Returns:
         capital
     """
-    return[get_capital(matches[0])]
+    return[get_capital(" ".join(matches[0]))]
 
 
 # dummy argument is ignored and doesn't matter
@@ -303,6 +311,9 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("when was % born".split(), birth_date),
     ("when were % born".split(), birth_date),
     ("what is the polar radius of %".split(), polar_radius),
+    ("what is the radius of %".split(), polar_radius),
+    ("what is the polar denisity of %".split(), polar_density),
+    ("what is the density of %".split(), polar_density),
     ("where did % have their education".split(),education),
     ("who is %'s father".split(),father),
     ("who is %'s dad".split(), father),
