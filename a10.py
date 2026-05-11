@@ -140,6 +140,25 @@ def get_birth_date(name: str) -> str:
     return match.group("birth")
 
 
+def get_death_date(name: str) -> str:
+    """Gets death date of the given person
+
+    Args:
+        name - name of the person
+
+    Returns:
+        death date of the given person
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    pattern = r"(?:Died\D*)(?P<death>\d{4}-\d{2}-\d{2})"
+    error_text = (
+        "Page infobox has no death information (at least none in xxxx-xx-xx format)"
+    )
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("death")
+
+
 def get_birth_place(name: str) -> str:
     """Gets the place where the given person was born
     Args:
@@ -149,7 +168,7 @@ def get_birth_place(name: str) -> str:
         place they were born
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    pattern = r"(?:Place\D*)(?P<birthp>[^()]+))"
+    pattern = r"(?:Place\D*)(?P<birthp>[^()]+)"
     error_text = (
         "Page infobox has no birth place information (at least none in the correct location)"
     )
@@ -167,7 +186,7 @@ def get_education(name: str) -> str:
         education of the inputed person
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    pattern = r"(?:Education\D*)(?P<education>.+)"
+    pattern = r"(?:Education\D*)(?P<education>[^\n]+)"
     error_text = (
         "Page infobox has no educational information (at least none in the correct location)"
     )
@@ -201,7 +220,7 @@ def get_capital(name: str) -> str:
         capital of the imputted location
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    pattern = r"(?:Capital\D*)(?P<capital>[A-Za-z .'-]+)"
+    pattern = r"(?:Capital\D*)(?P<capital>[A-Za-z .'\-()]+)"
     error_text = (
         "Page infobox has no information about a capital (at least none in the correct location)"
     )
@@ -237,6 +256,18 @@ def birth_date(matches: List[str]) -> List[str]:
     return [get_birth_date(" ".join(matches))]
 
 
+def death_date(matches: List[str]) -> List[str]:
+    """Returns death date of named person in matches
+
+    Args:
+        matches - match from pattern of person's name to find birth date of
+
+    Returns:
+        death date of named person
+    """
+    return [get_death_date(" ".join(matches))]
+
+
 def polar_radius(matches: List[str]) -> List[str]:
     """Returns polar radius of planet in matches
 
@@ -269,7 +300,7 @@ def education(matches: List[str]) -> List[str]:
     Returns:
         place of education
     """
-    return[get_education(" ".join(matches[0]))]
+    return [get_education(" ".join(matches))]
 
 
 def father(matches: List[str]) -> List[str]:
@@ -280,7 +311,7 @@ def father(matches: List[str]) -> List[str]:
     Returns:
         father
     """
-    return[get_father(" ".join(matches[0]))]
+    return [get_father(" ".join(matches[0]))]
 
 
 def capital(matches: List[str]) -> List[str]:
@@ -310,6 +341,7 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("where was % born".split(), birth_place),
     ("when was % born".split(), birth_date),
     ("when were % born".split(), birth_date),
+    ("when did % die".split(),death_date),
     ("what is the polar radius of %".split(), polar_radius),
     ("what is the radius of %".split(), polar_radius),
     ("what is the polar denisity of %".split(), polar_density),
