@@ -1,6 +1,6 @@
 import re, string, calendar, requests, time
 from wikipedia import WikipediaPage
-import wikipedia
+import wikipedia, requests
 from bs4 import BeautifulSoup
 from match import match
 from typing import List, Callable, Tuple, Any, Match
@@ -343,9 +343,9 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("when were % born".split(), birth_date),
     ("when did % die".split(),death_date),
     ("what is the polar radius of %".split(), polar_radius),
-    ("what is the radius of %".split(), polar_radius),
-    ("what is the polar denisity of %".split(), polar_density),
-    ("what is the density of %".split(), polar_density),
+    #("what is the radius of %".split(), polar_radius),
+    ("what is the polar density of %".split(), polar_density),
+    #("what is the density of %".split(), polar_density),
     ("where did % have their education".split(),education),
     ("who is %'s father".split(),father),
     ("who is %'s dad".split(), father),
